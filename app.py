@@ -16,11 +16,12 @@ st.markdown("""
 <style>
     [data-testid="stSidebarNav"] { font-size: 15px; }
     .metric-card {
-        background: #f8f9fa;
+        background: #1e3a5f;
         border-radius: 10px;
         padding: 16px 20px;
-        border-left: 4px solid #0066CC;
+        border-left: 4px solid #4da6ff;
         margin-bottom: 8px;
+        color: #ffffff;
     }
     .badge-pendente   { background:#fff3cd; color:#856404; padding:2px 8px; border-radius:12px; font-size:12px; }
     .badge-enviado    { background:#cfe2ff; color:#084298; padding:2px 8px; border-radius:12px; font-size:12px; }
@@ -68,7 +69,7 @@ try:
     for i, etapa in enumerate(ETAPAS_ATIVAS):
         n = contagem.get(etapa, 0)
         cols[i].markdown(
-            f"<div class='metric-card'><b>{n}</b><br><small>{etapa}</small></div>",
+            f"<div class='metric-card'><b style='font-size:1.4em'>{n}</b><br><small>{etapa}</small></div>",
             unsafe_allow_html=True
         )
 
