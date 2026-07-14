@@ -118,6 +118,7 @@ def atualizar_credito(cliente_id: str, aprovado: bool, data_analise: date, usuar
 # =============================================================
 
 def criar_checklist_engenharia(cliente_id: str):
+    """Insere os 12 documentos padrão da fase de Engenharia para o cliente."""
     existentes = db().table("documentos").select("tipo").eq("cliente_id", cliente_id).execute().data
     tipos_existentes = {d["tipo"] for d in existentes}
 
@@ -186,6 +187,42 @@ def listar_historico(cliente_id: str):
 # PIPELINE / DASHBOARD
 # =============================================================
 
+def listar_clientes_tabela():
+    """Lista clientes com data e ação da última entrada no histórico."""
+    clientes = (
+        db().table("clientes")
+        .select("id, nome, cpf, etapa, responsavel_crm, data_cadastro, observacoes")
+        .order("data_cadastro", desc=True)
+        .execute()
+        .data
+    )
+    if not clientes:
+        return []
+
+    ids = [c["id"] for c in clientes]
+    historico = (
+        db().table("historico")
+        .select("cliente_id, data, acao")
+        .in_("cliente_id", ids)
+        .order("data", desc=True)
+        .execute()
+        .data
+    )
+
+    ultima: dict = {}
+    for h in historico:
+        cid = h["cliente_id"]
+        if cid not in ultima:
+            ultima[cid] = {"data": h["data"][:10], "acao": h["acao"]}
+
+    for c in clientes:
+        u = ultima.get(c["id"])
+        c["ultima_acao"] = u["acao"] if u else "Cadastro"
+        c["ultima_data"] = u["data"] if u else (c.get("data_cadastro", "")[:10])
+
+    return clientes
+
+
 def contar_por_etapa() -> dict:
     res = db().table("clientes").select("etapa").execute().data
     contagem = {e: 0 for e in ETAPAS}
@@ -212,6 +249,7 @@ def alertas_credito_vencendo(dias: int = 30):
 
 
 def alertas_documentos_pendentes(dias: int = 15):
+    """Retorna documentos com status Pendente há mais de N dias."""
     limite = (date.today() - timedelta(days=dias)).isoformat()
     return (
         db().table("documentos")
