@@ -1,18 +1,29 @@
 """
 Novo Cliente — formulário de cadastro
 """
-
 import streamlit as st
 from database import criar_cliente
+from utils import render_sidebar, LIGHT_CSS
 
-st.set_page_config(page_title="Novo Cliente", page_icon="➕", layout="centered")
-st.title("➕ Novo Cliente")
+st.set_page_config(page_title="Novo Cliente · Habitare", page_icon="➕", layout="centered")
+st.markdown(LIGHT_CSS, unsafe_allow_html=True)
+render_sidebar()
+
+st.markdown(
+    "<span style='font-size:22px;font-weight:700;color:#1A2035;'>➕ Novo Cliente</span>",
+    unsafe_allow_html=True,
+)
+st.markdown(
+    "<div style='color:#8899AA;font-size:13px;margin-bottom:20px;'>"
+    "Cadastro inicial — etapa Lead</div>",
+    unsafe_allow_html=True,
+)
 
 usuario = st.session_state.get("usuario", "Usuário")
 
 with st.form("form_novo_cliente"):
     st.markdown("**Dados pessoais**")
-    c1, c2 = st.columns(2)
+    c1, c2   = st.columns(2)
     nome     = c1.text_input("Nome completo *", placeholder="João da Silva")
     cpf      = c2.text_input("CPF *", placeholder="000.000.000-00")
     telefone = c1.text_input("Telefone", placeholder="(00) 90000-0000")
@@ -44,7 +55,7 @@ if submitted:
             })
             st.success(f"✅ Cliente **{nome}** cadastrado com sucesso!")
             st.session_state["cliente_id_ativo"] = cliente["id"]
-            if st.button("Ver ficha do cliente"):
+            if st.button("Ver ficha do cliente →"):
                 st.switch_page("pages/2_Clientes.py")
         except Exception as e:
             if "unique" in str(e).lower() or "duplicate" in str(e).lower():
