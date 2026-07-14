@@ -15,18 +15,32 @@ st.set_page_config(
 st.markdown("""
 <style>
     [data-testid="stSidebarNav"] { font-size: 15px; }
+    /* ── Habitare palette: primary #2F5AA8 ── */
     .metric-card {
-        background: #1e3a5f;
+        background: #0e2144;
         border-radius: 10px;
         padding: 16px 20px;
-        border-left: 4px solid #4da6ff;
+        border-left: 4px solid #2F5AA8;
         margin-bottom: 8px;
         color: #ffffff;
     }
+    .etapa-badge {
+        display: inline-block;
+        background: #2F5AA8;
+        color: #ffffff;
+        padding: 3px 10px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 600;
+    }
     .badge-pendente   { background:#fff3cd; color:#856404; padding:2px 8px; border-radius:12px; font-size:12px; }
-    .badge-enviado    { background:#cfe2ff; color:#084298; padding:2px 8px; border-radius:12px; font-size:12px; }
-    .badge-aprovado   { background:#d1e7dd; color:#0a3622; padding:2px 8px; border-radius:12px; font-size:12px; }
+    .badge-enviado    { background:#b8d4f5; color:#0d2d5a; padding:2px 8px; border-radius:12px; font-size:12px; }
+    .badge-aprovado   { background:#c8ead8; color:#0a3622; padding:2px 8px; border-radius:12px; font-size:12px; }
     .badge-rejeitado  { background:#f8d7da; color:#842029; padding:2px 8px; border-radius:12px; font-size:12px; }
+    .tabela-linha {
+        border-bottom: 1px solid #1e3060;
+        padding: 8px 4px;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -35,7 +49,10 @@ if "usuario" not in st.session_state:
     st.session_state.usuario = "Usuário"
 
 with st.sidebar:
-    st.image("https://via.placeholder.com/200x60?text=Imobili%C3%A1ria", use_column_width=True)
+    try:
+        st.image("https://storage.googleapis.com/imobzi/accounts/ac-sjtw19114w3f5/public/logo2.png", use_column_width=True)
+    except Exception:
+        st.markdown("### 🏠 Habitare")
     st.markdown("---")
     usuario = st.text_input("Seu nome", value=st.session_state.usuario, key="input_usuario")
     st.session_state.usuario = usuario
